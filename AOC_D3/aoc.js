@@ -91,13 +91,13 @@ function processPartTwo(filePath) {
     while (i < input.length) {
       if (input.slice(i, i + 4) === 'do()') {
         isMulEnabled = true;
-        i += 4; // Skip `do()`
+        i += 4; 
         continue;
       }
 
       if (input.slice(i, i + 7) === "don't()") {
         isMulEnabled = false;
-        i += 7; // Skip `don't()`
+        i += 7; 
         continue;
       }
 
