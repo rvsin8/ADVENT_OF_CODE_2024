@@ -55,8 +55,8 @@ Update your analysis by handling situations where the Problem Dampener can remov
 
 Your puzzle answer was 426.
 */
+const reports = input.split('\n').map(line => line.trim().split(' ').map(Number));
 function countSafeReports(input) {
-    const reports = input.split('\n').map(line => line.trim().split(' ').map(Number));
     let safeCount = 0;
     
     function isSafe(report) {
@@ -78,7 +78,6 @@ function countSafeReports(input) {
 };
 
 function countSafeReportsWithDampener(input) {
-    const reports = input.split('\n').map(line => line.trim().split(' ').map(Number));
     let safeCount = 0;
 
     function isSafe(report) {
@@ -93,7 +92,7 @@ function countSafeReportsWithDampener(input) {
             if (diff < 0) increasing = false;
         }
         return increasing || decreasing;
-    }
+    };
 
     function isSafeWithDampener(report) {
         if (isSafe(report)) return true;
@@ -104,7 +103,6 @@ function countSafeReportsWithDampener(input) {
                 return true;
             }
         }
-
         return false;
     };
 

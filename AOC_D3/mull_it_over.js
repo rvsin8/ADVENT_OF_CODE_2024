@@ -1,5 +1,7 @@
 const fs = require('fs');
-/* 
+
+const input = fs.readFileSync('input.txt', 'utf8').trim();
+/*
 --- Day 3: Mull It Over ---
 "Our computers are having issues, so I have no idea if we have any Chief Historians in stock! You're welcome to check the warehouse, though," says the mildly flustered shopkeeper at the North Pole Toboggan Rental Shop. The Historians head out to take a look.
 
@@ -20,47 +22,49 @@ Scan the corrupted memory for uncorrupted mul instructions. What do you get if y
 
 Your puzzle answer was 175615763.
 */
-function processFile(filePath) {
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    let totalSum = 0;
-    let i = 0;
 
-    while (i < data.length) {
-      if (data.slice(i, i + 4) === 'mul(') { //skip
-        i += 4; 
+function processPartOne(input) {
+  let totalSum = 0;
+  let i = 0;
 
-        let num1 = '';
-        let num2 = '';
-        while (data[i] >= '0' && data[i] <= '9') { //num1
-          num1 += data[i];
-          i++;
-        }
+  while (i < input.length) {
+    if (input.slice(i, i + 4) === 'mul(') {
+      i += 4;
 
-        if (data[i] === ',') i++; //skip
+      let num1 = '';
+      let num2 = '';
 
-        while (data[i] >= '0' && data[i] <= '9') { //num2
-          num2 += data[i];
-          i++;
-        }
+      while (input[i] >= '0' && input[i] <= '9') {
+        num1 += input[i];
+        i++;
+      }
 
-        if (data[i] === ')') i++;
-        else continue; 
+      if (input[i] === ',') i++;
 
+      while (input[i] >= '0' && input[i] <= '9') {
+        num2 += input[i];
+        i++;
+      }
+
+      if (input[i] === ')') {
+        i++;
         if (num1 !== '' && num2 !== '') {
-          totalSum += parseInt(num1, 10) * parseInt(num2, 10); //multiply then add to total sum
+          totalSum += parseInt(num1, 10) * parseInt(num2, 10);
         }
       } else {
-        i++; 
+        continue;
       }
+    } else {
+      i++;
     }
-    console.log('Total Sum:', totalSum);
-  });
+  }
+
+  return totalSum;
 }
 
-processFile('input.txt');
+console.log('Part One Total Sum:', processPartOne(input));
 
-
-/* 
+/*
 --- Part Two ---
 As you scan through the corrupted memory, you notice that some of the conditional statements are also still intact. If you handle some of the uncorrupted conditional statements in the program, you might be able to get an even more accurate result.
 
@@ -81,58 +85,57 @@ Handle the new instructions; what do you get if you add up all of the results of
 
 Your puzzle answer was 74361272.
 */
-function processPartTwo(filePath) {
-  fs.readFile(filePath, 'utf8', (err, input) => {
 
-    let totalSum = 0;
-    let isMulEnabled = true;
-    let i = 0;
+function processPartTwo(input) {
+  let totalSum = 0;
+  let isMulEnabled = true;
+  let i = 0;
 
-    while (i < input.length) {
-      if (input.slice(i, i + 4) === 'do()') {
-        isMulEnabled = true;
-        i += 4; 
-        continue;
+  while (i < input.length) {
+    if (input.slice(i, i + 4) === 'do()') {
+      isMulEnabled = true;
+      i += 4;
+      continue;
+    }
+
+    if (input.slice(i, i + 7) === "don't()") {
+      isMulEnabled = false;
+      i += 7;
+      continue;
+    }
+
+    if (input.slice(i, i + 4) === 'mul(' && isMulEnabled) {
+      i += 4;
+
+      let num1 = '';
+      let num2 = '';
+
+      while (input[i] >= '0' && input[i] <= '9') {
+        num1 += input[i];
+        i++;
       }
 
-      if (input.slice(i, i + 7) === "don't()") {
-        isMulEnabled = false;
-        i += 7; 
-        continue;
+      if (input[i] === ',') i++;
+
+      while (input[i] >= '0' && input[i] <= '9') {
+        num2 += input[i];
+        i++;
       }
 
-      if (input.slice(i, i + 4) === 'mul(' && isMulEnabled) {
-        i += 4;
-
-        let num1 = '';
-        let num2 = '';
-
-        while (input[i] >= '0' && input[i] <= '9') {
-          num1 += input[i];
-          i++;
-        }
-
-        if (input[i] === ',') i++;
-
-        while (input[i] >= '0' && input[i] <= '9') {
-          num2 += input[i];
-          i++;
-        }
-
-        if (input[i] === ')') i++;
-        else continue;
-
+      if (input[i] === ')') {
+        i++;
         if (num1 !== '' && num2 !== '') {
           totalSum += parseInt(num1, 10) * parseInt(num2, 10);
         }
       } else {
-        i++;
+        continue;
       }
+    } else {
+      i++;
     }
+  }
 
-    console.log('Total Sum:', totalSum);
-  });
+  return totalSum;
 }
 
-processPartTwo('input.txt');
-
+console.log('Part Two Total Sum:', processPartTwo(input));
