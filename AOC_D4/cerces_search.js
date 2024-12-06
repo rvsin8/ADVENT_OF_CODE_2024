@@ -1,7 +1,8 @@
 const fs = require('fs');
 
 const inputFile = 'input.txt';
-const grid = fs.readFileSync(inputFile, 'utf-8').trim().split('\n').map(line => line.split('')); //seems like a better way to parse / format
+const grid = fs.readFileSync(inputFile, 'utf-8').trim().split('\n').map(line => line.split(''));
+
 
 /*
 --- Day 4: Ceres Search ---
@@ -92,3 +93,72 @@ const findWordOccurrences = (grid, WORD) => {
 const totalOccurrences = findWordOccurrences(grid, WORD);
 console.log(totalOccurrences);
 
+const { readFileSync } = require("fs");
+/* --- Part Two ---
+The Elf looks quizzically at you. Did you misunderstand the assignment?
+
+Looking for the instructions, you flip over the word search to find that this isn't actually an XMAS puzzle; it's an X-MAS puzzle in which you're supposed to find two MAS in the shape of an X. One way to achieve that is like this:
+
+M.S
+.A.
+M.S
+Irrelevant characters have again been replaced with . in the above diagram. Within the X, each MAS can be written forwards or backwards.
+
+Here's the same example from before, but this time all of the X-MASes have been kept instead:
+
+.M.S......
+..A..MSMS.
+.M.S.MAA..
+..A.ASMSM.
+.M.S.M....
+..........
+S.S.S.S.S.
+.A.A.A.A..
+M.M.M.M.M.
+..........
+In this example, an X-MAS appears 9 times.
+
+Flip the word search from the instructions back over to the word search side and try again. How many times does an X-MAS appear?
+
+Your puzzle answer was 1967.
+*/
+
+function countXmasPatterns(grid) {
+	let count = 0;
+
+	for (let i = 0; i < grid.length; i++) {
+		for (let j = 0; j < grid[i].length; j++) {
+			if (grid[i][j] === "A") {
+				// Check for X-MAS pattern centered at (i, j)
+				const leftToRightDiagonal = [];
+				const rightToLeftDiagonal = [];
+
+				if (
+					i - 1 >= 0 &&
+					i + 1 < grid.length &&
+					j - 1 >= 0 &&
+					j + 1 < grid[i].length
+				) {
+					for (let k = -1; k <= 1; k++) {
+						leftToRightDiagonal.push(grid[i + k][j + k]);
+						rightToLeftDiagonal.push(grid[i - k][j + k]);
+					}
+
+					const leftToRightWord = leftToRightDiagonal.join("");
+					const rightToLeftWord = rightToLeftDiagonal.join("");
+
+					if (
+						(leftToRightWord === "SAM" || leftToRightWord === "MAS") &&
+						(rightToLeftWord === "SAM" || rightToLeftWord === "MAS")
+					) {
+						count++;
+					}
+				}
+			}
+		}
+	}
+
+	return count;
+}
+
+console.log(countXmasPatterns(grid));
